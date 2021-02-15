@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../.idea/eq-works-interview.iml" filepath="$PROJECT_DIR$/../.idea/eq-works-interview.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/test.iml" filepath="$PROJECT_DIR$/.idea/test.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ws-product-nodejs/.idea/ws-product-nodejs.iml" filepath="$PROJECT_DIR$/../ws-product-nodejs/.idea/ws-product-nodejs.iml" />
     </modules>
