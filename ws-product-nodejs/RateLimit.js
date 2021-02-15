@@ -1,7 +1,16 @@
 //variables------------------------------------
 var GLOBAL_RATE_LIMIT=3000; // maximum number of requests you can handle accorss users
 var TIME_LIMIT=10; // how big is the sliding window
-var RATE_LIMIT_TIME_WINDOW=10;// how big is the sliding window for th user
+var RATE_LIMIT_TIME_WINDOW=100;// how big is the sliding window for th user
+
+/*
+WE WILL LIMIT A USER TO 100 (RATE_LIMIT_TIME_WINDOW) REQUESTS 
+OVER 10(TIME_LIMIT) SECONDS OF TIME
+
+WE WILL LIMIT ALL THE USERS TO 3000(GLOBAL_RATE_LIMIT) REQUESTS
+OVER 10(TIME_LIMIT) SECONDS OF TIME
+*/
+
 
 // the smaller the more perfomance intensive 
 // the larger the poor exprience for to client

@@ -35,7 +35,6 @@ app.get('/events/hourly', (req, res, next) => {
   return next()
 }, queryHandler)
 
-
 app.get('/events/daily', (req, res, next) => {
   req.sqlQuery = `
     SELECT date, SUM(events) AS events
