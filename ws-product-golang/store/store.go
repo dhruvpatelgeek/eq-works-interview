@@ -28,7 +28,7 @@ import (
 //-----------------------------------------
 //CONTROL PANEL----------------------------
 var debug = true
-var MEMORY_LIMIT = 512
+var MEMORY_LIMIT = 51200
 var MULTI_CORE_MODE = true
 var MAP_SIZE_MB = 70
 var CACHE = 10
@@ -228,7 +228,7 @@ func message_handler(message []byte) []byte {
 			if debug {
 				fmt.Println("INVALID COMMAND")
 			}
-			return message
+			return message;
 		}
 	}
 	return is_alive();
@@ -753,7 +753,7 @@ func spawn_UDP_daemon(_port string) func() {
 func init_server(args string) {
 	spawner := spawn_UDP_daemon(args)
 	if MULTI_CORE_MODE {
-		fmt.Println("[MULTICORE MODE]DONT GRADE IN THIS MODE [", runtime.NumCPU(), "] SPANNERS\n")
+		fmt.Println("[MULTICORE MODE] [", runtime.NumCPU(), "] SPANNERS AT PORT [",args,"] SYS MEM LIMIT [",MEMORY_LIMIT,"]");
 	}
 	spawner()
 }

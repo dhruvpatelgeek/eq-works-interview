@@ -1,10 +1,11 @@
 package main
 
 import (
+	"../../google_protocol_buffer/pb/protobuf"
 	"bufio"
-	"encoding/hex"
 	"fmt"
 	"github.com/golang/protobuf/proto"
+	guuid "github.com/google/uuid"
 	"hash/crc32"
 	"log"
 	"math/rand"
@@ -14,8 +15,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	"../../google_protocol_buffer/pb/protobuf"
-	guuid "github.com/google/uuid"
 )
 
 type counters struct {
@@ -27,10 +26,12 @@ type counters struct {
 var (
 	c = counters{}
 	content = []string{"sports", "entertainment", "business", "education"}
+	database_port="3000"
 )
 
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to EQ Works 😎")
+	sendRequest("hello","world");
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -105,6 +106,11 @@ func genUUID() string {
 	//fmt.Printf("UUID GENERATED-> %s\n", id.String())
 	return id.String()
 }
+func sendRequest(key string,value string){
+	message,messageId:=generatePayload([]byte(key),[]byte(value));
+	server_address:="127.0.0.1"+":"+database_port;
+	firePayload(message,server_address,messageId);
+}
 func calculate_checksum(a []byte,b []byte) uint64{
 	var concat_byte_arr=append(a,b...);
 	var check_sum=uint64(crc32.ChecksumIEEE(concat_byte_arr))
@@ -121,10 +127,9 @@ func generatePayload(key []byte,value []byte) ([]byte,string){
 	//* 0x08 - GetMembershipCount:(This will be used later)
 	
 	payload:=&protobuf.KVRequest{
-		Command: 0,
+		Command: 0x01,
 		Key:     key,
 		Value:   value,
-		Version: nil,
 	}
 	shell, err := proto.Marshal(payload)
 	if err != nil {
@@ -174,7 +179,7 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 		}
 		return
 	}else if err != nil {
-		fmt.Printf("\n[ERROR] reading\n")
+		fmt.Println("\n[ERROR] reading\n",err);
 		conn.Close();
 		return
 	} else {
@@ -185,20 +190,14 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 			Payload:   nil,
 			CheckSum:  0,
 		}
-		error:=proto.Unmarshal(response_payload,cast_response);
+		error:=proto.Unmarshal(response_payload[:byte_ctr],cast_response);
 		if(error!=nil) {
-			fmt.Printf("\nUNPACK ERROR %+v\n",error)
-		}
-		if(error!=nil) {
-			fmt.Printf("\nUNPACK ERROR %+v\n",error)
+			fmt.Printf("\n[e2e3]UNPACK ERROR %+v\n",error)
 		}
 		local_checksum:=calculate_checksum(cast_response.GetMessageID(),cast_response.GetPayload());
 		var flag=false;
 		if(local_checksum!=cast_response.GetCheckSum()){
 			fmt.Printf("\n[CHECKSUM WRONG]\n")
-			flag=true;
-		} else if(message_id!=hex.EncodeToString(cast_response.GetMessageID())){
-			fmt.Printf("\n[message ID WRONG]\n")
 			flag=true;
 		}
 		if(flag){
@@ -214,11 +213,13 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 				Pid:     nil,
 			}
 			error=proto.Unmarshal(server_response,res_struct);
-			if(res_struct.GetErrCode()==1){
+			if(res_struct.GetErrCode()==0){
 				fmt.Printf("\nVALLUE WRITTEN SUCESSFULLY\n----------");
-				fmt.Printf("value is %+v",res_struct.Value);
+				fmt.Printf("value written is \"%+v\"",string(res_struct.GetValue()));
 			} else {
-				fmt.Printf("\n[critical]satellite internal server error\n----------");
+				fmt.Printf("\n[SERVER ERROR]satellite internal server error\n----------");
+				fmt.Printf("\n[RETRYING]\n")
+				fire(payload,address,itr+1,timeout+100,message_id);
 			}
 		}
 		conn.Close();
@@ -230,14 +231,17 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 func main() {
 
 	argsWithProg := os.Args
-	if len(argsWithProg) != 2 {
-		fmt.Printf("PLEASE PASS PORT AS A PARAMETER....\n")
+	if len(argsWithProg) != 3 {
+		fmt.Printf("formmat go run main.go [server port] [database port]\n")
 	} else {
 		if !checkIfPortIsValid(argsWithProg[1]) {
-			fmt.Printf("PORT NOT VALID,EXITTING...\n")
+			fmt.Printf("[server port] NOT VALID,EXITTING...\n")
+		} else if !checkIfPortIsValid(argsWithProg[2]){
+			fmt.Printf("[database port] NOT VALID,EXITTING...\n")
 		} else {
 			fmt.Printf("STARTING SERVER------------------\n")
 			startServer(argsWithProg[1]) // initaliaze;
+			database_port=argsWithProg[2]
 		}
 	}
 }
