@@ -132,7 +132,7 @@ Google's protocol buffers on top of this to make it as light a feather
 
 ### Architecture
 
-![](/Users/dhruvpatel/Desktop/eq_careers/eq-works-interview/ws-product-golang/architecture.png)
+![](https://github.com/dhruvpatelgeek/eq-works-interview/blob/master/ws-product-golang/architecture.png)
 
 
 
