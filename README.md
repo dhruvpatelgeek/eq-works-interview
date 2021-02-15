@@ -27,4 +27,4 @@ we will use the ````Sliding Window Counter```` method
 
 Here the window time is broken down into smaller buckets — and the size of each bucket depends on the rate-limit threshold. Each bucket stores the request count corresponding to the bucket range, which constantly keeps moving across time, while smoothing outbursts of traffic.
 
-When the sum of the counters with timestamps in the past hour exceeds the request threshold, User 1 has exceeded the rate limit.
+When the sum of the counters with timestamps in the past time-slot exceeds the request threshold, User 1 has exceeded the rate limit.
