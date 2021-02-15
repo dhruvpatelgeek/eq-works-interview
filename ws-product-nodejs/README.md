@@ -1,32 +1,40 @@
-Work Sample for Product Aspect, Node.js Variant
----
+# Rate limiter
 
-[What is this for?](https://github.com/EQWorks/work-samples#what-is-this)
+### configerable variables
+in ````ws-product-nodejs/RateLimit.js````
 
-### Setup and Run
+there are three variables to control the rate limit
 
-The following are the recommended options, but you're free to use any means to get started.
+````GLOBAL_RATE_LIMIT````
 
-#### Remote Option: Glitch.com
+>maximum number of requests you can handle accorss users
 
-1. [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/EQWorks/ws-product-nodejs)
-2. Populate `.env` file with the environment variables given in the problem set we send to you through email
-3. Click on `Show Live` and you should see `Welcome to EQ Works 😎`
+````TIME_LIMIT```` 
+>how long do should the request window be
 
-#### Local Option 1: Node.js 6.10+
+````RATE_LIMIT_TIME_WINDOW````
+>how big is the sliding window for th user
 
-1. Clone this repository
-2. Install Node.js dependencies `$ npm install`
-3. Set environment variables given in the problem set we send to you through email and run `$ npm run dev`
-4. Open your browser and point to `localhost:5555` and you should see `Welcome to EQ Works 😎`
+### Example
+say you have a GCP instance that can 
+handle no more than
+````5000```` total requests 
+in ````1 hr````
 
-#### Local Option 2: Docker (`docker-compose` needed)
+so set
 
-1. Clone this repository
-2. Create and populate `.env` file with the environment variables given in the problem set we send to you through email
-3. `$ docker-compose up` (or `$ docker-compose up -d` to run as a daemon)
-4. Open your browser and point to `localhost:5555` and you should see `Welcome to EQ Works 😎`
+````GLOBAL_RATE_LIMIT=5000````
 
-### Notes on working through the problems
+````TIME_LIMIT=60*60````
 
-Make sure any additional Node.js level dependencies are properly added in `package.json`. We encourage a healthy mixture of your own implementations, and good choices of existing open-source libraries/tools. We will comment in the problems to indicate which ones cannot be solved purely through an off-the-shelf solution.
+````RATE_LIMIT_TIME_WINDOW=5000````
+
+
+### future features
+> individual client rate limiting
+
+I have configured my assignment in such a way that 
+if you want to limit rates on a per client bases you can do so 
+by simply changing the ````RATE_LIMIT_TIME_WINDOW```` for that client 
+it is fairly trivial to implement here
+
