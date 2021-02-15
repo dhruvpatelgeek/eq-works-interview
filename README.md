@@ -1,8 +1,18 @@
-# Implementation
+[TOC]
+
+# path 1 server-side rate-limiting NODE varient
+
+
+
+-------
+
+
+
+## Implementation
 
 We will use
 
-```` node-cache````
+### ```` node-cache````
 
 ![Logo](https://raw.githubusercontent.com/node-cache/node-cache/HEAD/logo/logo.png)
 
@@ -30,7 +40,7 @@ Else if it is greater than
 
 
 
-# Design
+## Design
 
 
 
@@ -39,7 +49,7 @@ Else if it is greater than
 - maximize client satisfaction
 - minimize the cost attrition on our end
 ----
-## Rate Limiter Algorithms
+### Rate Limiter Algorithms
 - ❌ Token Bucket ```` could lead to a race condition````
 - ❌ Leaky Bucket ```` not good for a distributed system````
 - ❌ Fixed Window Counter ```` allows more request than necessary````
@@ -59,7 +69,7 @@ inspiration from
 ![](./ws-product-nodejs/swc.png)
 A. H. Fahim Raouf and J. Abouei, "Cache Replacement Scheme Based on Sliding Window and TTL for Video on Demand," Electrical Engineering (ICEE), Iranian Conference on, Mashhad, 2018, pp. 499-504, doi: 10.1109/ICEE.2018.8472723.
 
-## decision
+### decision
 we will use the ````Sliding Window Counter```` method
 
 ![](./ws-product-nodejs/sliding_window_ctr.png)
@@ -67,3 +77,54 @@ we will use the ````Sliding Window Counter```` method
 Here the window time is broken down into smaller buckets — and the size of each bucket depends on the rate-limit threshold. Each bucket stores the request count corresponding to the bucket range, which constantly keeps moving across time, while smoothing outbursts of traffic.
 
 When the sum of the counters with timestamps in the past time-slot exceeds the request threshold, User 1 has exceeded the rate limit.
+
+-------
+
+
+
+# path 2b back end track
+
+in order to show my distributed system prowess i am goinging desing a fault tolertent  satellite-based  storages in addiiton to what has been asked 
+
+#### 
+
+## Requirements
+
+- fast 
+- cheap
+- low memory footprint
+
+## Design
+
+
+
+### Communication
+
+i will ditch the application layer communication system ````UDP```` instead of  ````http```` in favour of transport layer communication for 
+
+- faster communication
+- 100x lower cost
+
+we will use 
+
+Google's protocol buffers on top of this to make it as light a feather 
+
+![](https://miro.medium.com/max/1400/1*2G7HXILlV5MUIHeNjiYZPA.png)
+
+(https://www.researchgate.net/publication/311461272_Performance_evaluation_of_using_Protocol_Buffers_in_the_Internet_of_Things_communication)
+
+
+
+### Architecture
+
+![](/Users/dhruvpatel/Desktop/eq_careers/eq-works-interview/ws-product-golang/architecture.png)
+
+
+
+
+
+The client will encode the message in GCP and send a udp bye stream to the server. 
+
+we will used IEEE checksum for maintinaing data intergrity 
+
+ 
