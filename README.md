@@ -113,7 +113,9 @@ in order to show my distributed system prowess i am goinging desing a fault tole
 
 ### Communication
 
-i will ditch the application layer communication system ````UDP```` instead of  ````http```` in favour of transport layer communication for 
+i will ditch the application layer communication system ````http````
+
+ in favour of transport layer communication   ````UDP````
 
 - faster communication
 - 100x lower cost
