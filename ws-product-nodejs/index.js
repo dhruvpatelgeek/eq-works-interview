@@ -5,7 +5,13 @@ const app = express()
 // https://www.postgresql.org/docs/9.6/static/libpq-envars.html
 const pool = new pg.Pool()
 
+// loads the custom enf variables 
 require ('custom-env').env('staging')
+
+//rate limiting---------------------------------------
+var RateLimit=require("./RateLimit.js");
+var userRatelimiter=new RateLimit();
+//---------------------------------------------------
 
 const queryHandler = (req, res, next) => {
   pool.query(req.sqlQuery).then((r) => {
@@ -13,6 +19,7 @@ const queryHandler = (req, res, next) => {
   }).catch(next)
 }
 
+app.use(userRatelimiter.middlewareRateLimiter);
 
 app.get('/', (req, res) => {
   res.send('Welcome to EQ Works 😎')
@@ -72,6 +79,7 @@ app.get('/poi', (req, res, next) => {
   return next()
 }, queryHandler)
 
+
 app.listen(process.env.PORT || 5555, (err) => {
   if (err) {
     console.error(err)
@@ -80,6 +88,20 @@ app.listen(process.env.PORT || 5555, (err) => {
     console.log(`Running on ${process.env.PORT || 5555}`)
   } 
 })
+
+app.use(function (error, req, res, next) {
+	if(error instanceof session.Error)
+	{
+		res.status(401);
+		res.send("INTERNAL SERVER ERROR")
+	}
+	else
+	{
+		res.status(429);
+		res.send("RATE LIMITED");
+	}
+	next();
+  })
 
 // last resorts
 process.on('uncaughtException', (err) => {
