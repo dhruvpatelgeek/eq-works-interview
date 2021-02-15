@@ -89,7 +89,7 @@ app.listen(process.env.PORT || 5555, (err) => {
   } 
 })
 
-app.use(function (error, req, res, next) {
+app.use(function (error, req, res, next) { 
 	if(error instanceof session.Error)
 	{
 		res.status(401);
@@ -101,7 +101,7 @@ app.use(function (error, req, res, next) {
 		res.send("RATE LIMITED");
 	}
 	next();
-  })
+})
 
 // last resorts
 process.on('uncaughtException', (err) => {

@@ -1,7 +1,7 @@
 //variables------------------------------------
 var GLOBAL_RATE_LIMIT=3000; // maximum number of requests you can handle accorss users
 var TIME_LIMIT=10; // how big is the sliding window
-var RATE_LIMIT_TIME_WINDOW=3;// how big is the sliding window for th user
+var RATE_LIMIT_TIME_WINDOW=10;// how big is the sliding window for th user
 
 // the smaller the more perfomance intensive 
 // the larger the poor exprience for to client
@@ -73,7 +73,7 @@ function RateLimit (){
 			next(errObj);
 		}
         else{
-            var result=putIntoStack("user-1");
+            var result=putIntoStack(req.socket.remoteAddress);
             // use a client UID here to prevent DDOS attacks
             // for not i will simply use the ip address here for sake of simplicity
 
@@ -87,8 +87,9 @@ function RateLimit (){
            } else {
                 if (debug){
                     console.log("not added");
+                    res.status(429);
+		            res.send("RATE LIMITED");
                 }
-			 next();
            }
         }
     }
