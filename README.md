@@ -138,3 +138,15 @@ we will used IEEE checksum for maintinaing data intergrity
 
  
 
+### Rate Limiter Algorithm
+
+we will use the sliding window (without the log) rate limiting algorithm in this case
+
+#### implementation
+
+> we will have a go-cache in which we will store requests stack with a RATE_LIMIT time of expiration date  if there are more requests it will simply overflow and respond with 429 
+
+> we will also have a go map to store the key values that are to be stored 
+>
+> Every REFRESH_RATE we will send the Key value pairs to the server
+
