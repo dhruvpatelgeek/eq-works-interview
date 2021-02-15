@@ -88,11 +88,7 @@ func startServer(port string){
 	addr:=":"+port;
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
-/**
- * @Description: checks if port is valid
- * @param port
- * @return bool
- */
+//COMUNICATION WITH satellite------------------------------------
 func checkIfPortIsValid(port string) bool {
 	castedPort, err := strconv.Atoi(port)
 	if err != nil {
@@ -104,19 +100,16 @@ func checkIfPortIsValid(port string) bool {
 		return true
 	}
 }
-
 func genUUID() string {
 	id := guuid.New()
 	//fmt.Printf("UUID GENERATED-> %s\n", id.String())
 	return id.String()
 }
-
 func calculate_checksum(a []byte,b []byte) uint64{
 	var concat_byte_arr=append(a,b...);
 	var check_sum=uint64(crc32.ChecksumIEEE(concat_byte_arr))
 	return check_sum;
 }
-
 func generatePayload(key []byte,value []byte) ([]byte,string){
 	//* 0x01 - Put: This is a put operation.
 	//* 0x02 - Get: This is a get operation.
@@ -153,11 +146,9 @@ func generatePayload(key []byte,value []byte) ([]byte,string){
 
 	return casted_casing,message_id
 }
-
-func firePayload(shell []byte,location string,message_id string){
-	fire(shell,location,0,100,message_id)
+func firePayload(shell []byte,server_ip string,message_id string){
+	fire(shell,server_ip,0,100,message_id)
 }
-
 func fire(payload []byte,address string,itr int,timeout int64,message_id string){
 	fmt.Printf("RETRYING REQUEST [%d]--------------------------\n",itr);
 	conn, err := net.Dial("udp", address)
@@ -235,7 +226,7 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 	}
 	return
 }
-
+//---------------------------------------------------------------
 func main() {
 
 	argsWithProg := os.Args
