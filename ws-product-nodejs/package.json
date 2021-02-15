@@ -21,6 +21,7 @@
   "dependencies": {
     "custom-env": "^2.0.1",
     "express": "^4.15.3",
+    "node-cache": "^5.1.2",
     "pg": "^6.2.4"
   },
   "devDependencies": {

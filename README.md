@@ -1,10 +1,49 @@
-# Techniques for enforcing rate limits
+# Implementation
+
+We will use
+
+```` node-cache````
+
+![Logo](https://raw.githubusercontent.com/node-cache/node-cache/HEAD/logo/logo.png)
+
+[![Node.js CI](https://github.com/node-cache/node-cache/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/node-cache/node-cache/actions?query=workflow%3A"Node.js+CI"+branch%3A"master") ![Dependency status](https://img.shields.io/david/node-cache/node-cache) [![NPM package version](https://img.shields.io/npm/v/node-cache?label=npm%20package)](https://www.npmjs.com/package/node-cache) [![NPM monthly downloads](https://img.shields.io/npm/dm/node-cache)](https://www.npmjs.com/package/node-cache) [![GitHub issues](https://img.shields.io/github/issues/node-cache/node-cache)](https://github.com/node-cache/node-cache/issues) [![Coveralls Coverage](https://img.shields.io/coveralls/node-cache/node-cache.svg)](https://coveralls.io/github/node-cache/node-cache)
+
+
+
+when a user makes a request we fist see how many requests have been made in the past ````TIME-WINDOW````
+
+if is is below the limit will will serve the user and 
+
+
+
+add the key- value to the table using 
+
+````myCache.set( key, val, [ ttl ] )````
+
+when its ttl or time to live hits zero thr key will be automatically deleted
+
+
+
+Else if it is greater than 
+
+
+
+will will respond with an```` **HTTP** 429 Too Many Requests **response status code** ````indicating the user has sent too many requests in a given amount of time ("**rate limiting**").
+
+
+
+
+
+# Design
+
+
+
 ### OBJECTIVES
 
 - maximize client satisfaction
 - minimize the cost attrition on our end
 ----
-# Rate Limiter Algorithms
+## Rate Limiter Algorithms
 - ❌ Token Bucket ```` could lead to a race condition````
 - ❌ Leaky Bucket ```` not good for a distributed system````
 - ❌ Fixed Window Counter ```` allows more request than necessary````
@@ -20,7 +59,7 @@
 > rack up, at the same time we want to provide the best
 > service for our clientele
 
-# decision
+## decision
 we will use the ````Sliding Window Counter```` method
 
 ![](./ws-product-nodejs/sliding_window_ctr.png)
