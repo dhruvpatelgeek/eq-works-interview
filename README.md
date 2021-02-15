@@ -79,7 +79,6 @@ Else if it is greater than
 > service for our clientele
 ----
 inspiration from 
-![](./ws-product-nodejs/swc.png)
 A. H. Fahim Raouf and J. Abouei, "Cache Replacement Scheme Based on Sliding Window and TTL for Video on Demand," Electrical Engineering (ICEE), Iranian Conference on, Mashhad, 2018, pp. 499-504, doi: 10.1109/ICEE.2018.8472723.
 
 ### decision
