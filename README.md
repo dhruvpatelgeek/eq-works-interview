@@ -1,4 +1,17 @@
-[TOC]
+# Table of contents
+
+- [path 1 server-side rate-limiting NODE varient](#path-1-server-side-rate-limiting-node-varient)
+  - [Implementation](#implementation)
+    - [```` node-cache````](#-node-cache)
+  - [Design](#design)
+    - [OBJECTIVES](#objectives)
+    - [Rate Limiter Algorithms](#rate-limiter-algorithms)
+    - [decision](#decision)
+- [path 2b back end track](#path-2b-back-end-track)
+  - [Requirements](#requirements)
+  - [Design](#design)
+    - [Communication](#communication)
+    - [Architecture](#architecture)
 
 # path 1 server-side rate-limiting NODE varient
 
