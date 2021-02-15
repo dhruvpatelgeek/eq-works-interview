@@ -12,15 +12,11 @@ We will use
 
 when a user makes a request we fist see how many requests have been made in the past ````TIME-WINDOW````
 
-if is is below the limit will will serve the user and 
+if it is below the limit will will serve the user and 
 
 
 
-add the key- value to the table using 
-
-````myCache.set( key, val, [ ttl ] )````
-
-when its ttl or time to live hits zero thr key will be automatically deleted
+> add the key- value to the table using ````myCache.set( key, val, [ ttl ] )````when its ttl or time to live hits zero thr key will be automatically deleted
 
 
 
@@ -28,7 +24,7 @@ Else if it is greater than
 
 
 
-will will respond with an```` **HTTP** 429 Too Many Requests **response status code** ````indicating the user has sent too many requests in a given amount of time ("**rate limiting**").
+> will will respond with an```` **HTTP** 429 Too Many Requests **response status code** ````indicating the user has sent too many requests in a given amount of time ("**rate limiting**").
 
 
 
