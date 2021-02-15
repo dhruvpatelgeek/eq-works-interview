@@ -17,10 +17,6 @@
 
 
 
--------
-
-
-
 ## Implementation
 
 We will use
@@ -68,19 +64,18 @@ Else if it is greater than
 - ❌ Fixed Window Counter ```` allows more request than necessary````
 - ❌ Sliding Logs ```` not great for scalable APIs````
 - ✅Sliding Window Counter ````PERFECT for us````
-----
+
+
+
 > if I understand your business correctly, 
 > you serve large cooperation and big-name clients 
 > so the only source of error that would trigger the
 > need to use rate limits would be a developer/architecture error
-----
+
+
 >we need to make sure that our AWS/GCP bills don't 
 > rack up, at the same time we want to provide the best
 > service for our clientele
-----
-inspiration from 
-A. H. Fahim Raouf and J. Abouei, "Cache Replacement Scheme Based on Sliding Window and TTL for Video on Demand," Electrical Engineering (ICEE), Iranian Conference on, Mashhad, 2018, pp. 499-504, doi: 10.1109/ICEE.2018.8472723.
-
 ### decision
 we will use the ````Sliding Window Counter```` method
 
@@ -131,7 +126,7 @@ Google's protocol buffers on top of this to make it as light a feather
 
 ### Architecture
 
-![](https://github.com/dhruvpatelgeek/eq-works-interview/blob/master/ws-product-golang/architecture.png)
+![](./ws-product-golang/architecture.png)
 
 
 
@@ -142,3 +137,4 @@ The client will encode the message in GCP and send a udp bye stream to the serve
 we will used IEEE checksum for maintinaing data intergrity 
 
  
+
