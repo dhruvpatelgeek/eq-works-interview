@@ -31,7 +31,7 @@ Google's protocol buffers on top of this to make it as light a feather
 
 ### Architecture
 
-![](../ws-product-golang/architecture.png)
+![](https://github.com/dhruvpatelgeek/eq-works-interview/blob/master/ws-product-golang/architecture.png)
 
 
 
