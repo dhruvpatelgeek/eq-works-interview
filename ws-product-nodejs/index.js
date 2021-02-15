@@ -1,16 +1,18 @@
 const express = require('express')
 const pg = require('pg')
-
 const app = express()
 // configs come from standard PostgreSQL env vars
 // https://www.postgresql.org/docs/9.6/static/libpq-envars.html
 const pool = new pg.Pool()
+
+require ('custom-env').env('staging')
 
 const queryHandler = (req, res, next) => {
   pool.query(req.sqlQuery).then((r) => {
     return res.json(r.rows || [])
   }).catch(next)
 }
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to EQ Works 😎')
@@ -25,6 +27,7 @@ app.get('/events/hourly', (req, res, next) => {
   `
   return next()
 }, queryHandler)
+
 
 app.get('/events/daily', (req, res, next) => {
   req.sqlQuery = `
@@ -75,7 +78,7 @@ app.listen(process.env.PORT || 5555, (err) => {
     process.exit(1)
   } else {
     console.log(`Running on ${process.env.PORT || 5555}`)
-  }
+  } 
 })
 
 // last resorts
