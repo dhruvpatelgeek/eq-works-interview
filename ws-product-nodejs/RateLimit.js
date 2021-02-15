@@ -1,10 +1,10 @@
 //variables------------------------------------
 var GLOBAL_RATE_LIMIT=3000; // maximum number of requests you can handle accorss users
 var TIME_LIMIT=10; // how big is the sliding window
-var RATE_LIMIT_TIME_WINDOW=100;// how big is the sliding window for th user
+var RATE_LIMIT_TIME_WINDOW=5;// how big is the sliding window for th user
 
 /*
-WE WILL LIMIT A USER TO 100 (RATE_LIMIT_TIME_WINDOW) REQUESTS 
+WE WILL LIMIT A USER TO 5 (RATE_LIMIT_TIME_WINDOW) REQUESTS 
 OVER 10(TIME_LIMIT) SECONDS OF TIME
 
 WE WILL LIMIT ALL THE USERS TO 3000(GLOBAL_RATE_LIMIT) REQUESTS
@@ -29,6 +29,11 @@ class rateErr extends Error {};
 
 //---------------------------------------------
 //HELPER FUNCTION------------------------------
+/**
+ *
+ * @param key
+ * @returns the the array of requests that the user has made
+ */
 function getCallStack(key){
     var callStack=[];
     let ctr=0;
@@ -48,6 +53,11 @@ function getCallStack(key){
     return callStack;
 }
 
+/**
+ *
+ * @param key
+ * @returns {boolean} if true server the user else rate limit the user
+ */
 function putIntoStack(key){
     var callStack=getCallStack(key);
     if(callStack.length>RATE_LIMIT_TIME_WINDOW-1)
@@ -69,6 +79,10 @@ function putIntoStack(key){
 //---------------------------------------------
 
 //MAIN FUNCTION---------------------------------
+/**
+ *  middleware function for rate limiting
+ * @constructor
+ */
 function RateLimit (){
 
     this.middlewareRateLimiter=function (req, res, next) {
