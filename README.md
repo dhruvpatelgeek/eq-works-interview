@@ -1,6 +1,7 @@
 # Table of contents
 
 - [Table of contents](#table-of-contents)
+- [path 1b server-side rate-limiting](#path-1b-server-side-rate-limiting)
     - [VIDEOS](#videos)
   - [Deployment](#deployment)
     - [````http://bribchat.com:5555/````](#httpbribchatcom5555)
