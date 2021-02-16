@@ -7,8 +7,8 @@ const delay = 100;
 // 5 res in 10 secds 
 
 const fetch = require('node-fetch');
-//const _URL = "http://bribchat.com:5555";
-const _URL = "http://localhost:5555";
+const _URL = "http://bribchat.com:5555";
+//const _URL = "http://localhost:5555";
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
