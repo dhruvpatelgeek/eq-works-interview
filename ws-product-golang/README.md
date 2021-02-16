@@ -16,7 +16,7 @@ if you dont have your own testing suite
 
 you can run 
 
-````test/test_problem_2b.sh````
+````test/test_problem_2b.js````
 
 
 
@@ -28,7 +28,7 @@ make sure you have ports
 3001<- client
 ```
 
-avaibale 
+available 
 
 if not you can modify the  constants in````RUN_DATABASE.sh````  ,.````RUN_SERVER.sh```` files
 
