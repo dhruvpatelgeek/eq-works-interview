@@ -18,11 +18,10 @@ import (
 	"time"
 )
 //MESSAGE LIMIT CACHE--------------------
-const RATE_LIMIT = 5*time.Second
-const REQUEST_LIMIT=10;
-// you will have no more than 10 requests in 5 seconds
-
 const PURGE_TIME=1*time.Second;
+const RATE_LIMIT = 5*time.Second
+const REQUEST_LIMIT=100;
+// you will have no more than 10 requests in 5 seconds
 const UPLOAD_RATE=5*time.Second;
 
 //----------------------------------------//
@@ -111,12 +110,13 @@ func statsHandler(w http.ResponseWriter, r *http.Request) {
 
 func isAllowed() bool {
 	if(messageCache.ItemCount()<REQUEST_LIMIT) {
-		dt := time.Now()
-		//Format MM-DD-YYYY hh:mm:ss
-		currTime :=dt.Format("01-02-2006 15:04")
-		messageCache.Add(currTime,"dummy",cache.DefaultExpiration);
+		// Defining the time for String method
+		Time := time.Now();
+		currTime :=Time.String()
+		messageCache.Add(currTime,"dummy",RATE_LIMIT);
 		return true;
 	} else {
+		fmt.Println("[RATE LIMITED]")
 		return false
 	}
 }

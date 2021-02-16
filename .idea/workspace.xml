@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c032c2b9-5696-46a9-beda-4c221fd40bb7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/ws-product-golang/RUN_DATABASE.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/go_server_tester.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/go_server_tester.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-product-golang/run_prj.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-product-golang/run_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/run_server.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ws-product-golang/src/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/src/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-product-golang/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/store/store.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,11 +20,15 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1oXiQI8a0WAAvCvBvRyMLJVbI3U" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -35,5 +45,19 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

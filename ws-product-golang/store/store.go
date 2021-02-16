@@ -240,20 +240,11 @@ func message_handler(message []byte) []byte {
  * @return bool
  */
 func check_cache(message_id []byte)([]byte,bool){
-	if debug {
-		fmt.Println("checking cache...")
-	}
 	response, found := message_cache.Get(string(message_id))
 
 	if ! found {
-		if debug {
-			fmt.Println("not found...")
-		}
 		return nil, false;
 	} else {
-		if debug {
-			fmt.Println("found...")
-		}
 		str := fmt.Sprintf("%v", response)
 		var cached_data=[]byte(str);
 		return cached_data,true;
@@ -291,9 +282,6 @@ func cache_data(message_id []byte,data []byte)(bool){
  * @return []byte
  */
 func put(key []byte, value []byte, version int32) []byte {
-	fmt.Println("key is ",int64(len(key)),"\n");
-	fmt.Println("value is ",int64(len(key)),"\n");
-
 	var error_code uint32=0;
 	error_code=0;
 	if(int(len(key))>32) {
@@ -351,9 +339,6 @@ func put(key []byte, value []byte, version int32) []byte {
 		return out;
 	}
 
-	if debug {
-		fmt.Println("[BEFORE] MAP IS ",unsafe.Sizeof(storage));
-	}
 	mutex.Lock()//<<<<<<<<<<<<<<<MAP LOCK
 
 	if(bToMb(uint64(unsafe.Sizeof(storage)))<uint64(MAP_SIZE_MB)){
@@ -361,8 +346,7 @@ func put(key []byte, value []byte, version int32) []byte {
 		storage[string(key)] = value // adding the value
 		error_code=0;
 		if debug {
-			fmt.Println("PUT SUCCSESSFUL");
-			fmt.Println("[AFTER] MAP IS ",unsafe.Sizeof(storage));
+			fmt.Println("PUT",string(key),",<->",string(value));
 		}
 	} else{
 		if debug {
@@ -371,8 +355,6 @@ func put(key []byte, value []byte, version int32) []byte {
 		error_code=2;
 	}
 	mutex.Unlock()//<<<<<<<<<<<<<<<MAP UNLOCK
-	fmt.Print("[put] error code is",error_code,"\n");
-
 
 	var err_code *uint32;
 	err_code=new(uint32);
@@ -658,11 +640,9 @@ func UDP_daemon(connection *net.UDPConn, conduit chan int, thread_num int) {
 	}
 	n, remoteAddr, err = connection.ReadFromUDP(buffer)
 	conduit <- 1
-	fmt.Println("Serving", remoteAddr)
 	response_val,valid:=message_broker(buffer[:n]);
 	if(valid){
 		n, err = connection.WriteToUDP(response_val, remoteAddr)
-		fmt.Println("WROTE ",n,"bytes")
 		if err != nil {
 			fmt.Println("[FAIL] err serving ->", remoteAddr,"error is ",err)
 			fmt.Println("\n[IMP ERROR] message size was ",len(response_val));

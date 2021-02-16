@@ -1,15 +1,14 @@
-var LIMIT=10;
+var LIMIT=100;
 
 const http = require('http');
-const _URL = "http://localhost:3001/";
-const delay = 1;
+const _URL = "http://localhost:3001";
+const delay = 0.1;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const endpoints = ['/', '/view/', '/stats/'];
-
 async function test_end_point_(test_url){
     var res_ctr=0;
     var rate_limit_ctr=0;
@@ -26,7 +25,7 @@ async function test_end_point_(test_url){
             // The whole response has been received. Print out the result.
             resp.on('end', () => {
                 res_ctr++;
-               if(data=="RATE LIMITED")
+               if(resp.statusCode==429)
                 {
                     rate_limit_ctr++;
                 }
@@ -43,7 +42,7 @@ async function test_end_point_(test_url){
 async function test(){
     for (let i=0;i<endpoints.length;i++){
        await test_end_point_(endpoints[i]);
-        await sleep(10000);
+        await sleep(100);
     }
     console.log("[TESTS DONE]")
 }
