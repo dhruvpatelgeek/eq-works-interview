@@ -45,6 +45,9 @@ https://vimeo.com/512834202
 
 https://vimeo.com/512834228
 
+
+# path 1b server-side rate-limiting
+
 ## Deployment
 
 The API endpoint is deployed at 
@@ -59,7 +62,7 @@ the rate is limited to
 
 refer to 
 
-### ````ws-product-golang/README.md````
+### ````ws-product-nodejs/README.md````
 
 if you want to deploy and test it locally
 
