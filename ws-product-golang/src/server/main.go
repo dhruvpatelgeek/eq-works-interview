@@ -19,10 +19,14 @@ import (
 )
 //MESSAGE LIMIT CACHE--------------------
 const RATE_LIMIT = 5*time.Second
+const REQUEST_LIMIT=10;
+// you will have no more than 10 requests in 5 seconds
+
 const PURGE_TIME=1*time.Second;
 const UPLOAD_RATE=5*time.Second;
+
 //----------------------------------------//
-var message_cache = cache.New(RATE_LIMIT,PURGE_TIME)
+var messageCache = cache.New(RATE_LIMIT,PURGE_TIME)
 // stack to store requests
 var counterStack =make(map[string]string);
 //mutex to protect the map
@@ -106,8 +110,17 @@ func statsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func isAllowed() bool {
-	return true
+	if(messageCache.ItemCount()<REQUEST_LIMIT) {
+		dt := time.Now()
+		//Format MM-DD-YYYY hh:mm:ss
+		currTime :=dt.Format("01-02-2006 15:04")
+		messageCache.Add(currTime,"dummy",cache.DefaultExpiration);
+		return true;
+	} else {
+		return false
+	}
 }
+
 
 
 func uploadCounters() error {
