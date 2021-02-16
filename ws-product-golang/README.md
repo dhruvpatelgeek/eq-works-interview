@@ -12,7 +12,7 @@ in that order
 
 #### TESTING
 
-if you dont have you own testing suite 
+if you dont have your own testing suite 
 
 you can run 
 
