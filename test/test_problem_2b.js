@@ -1,14 +1,15 @@
-var LIMIT=100;
-
+const SERVER_PORT="3001"
+var LIMIT=10;
 const http = require('http');
-const _URL = "http://localhost:3001";
-const delay = 0.1;
+const _URL = "http://localhost:"+SERVER_PORT;
+const delay = 100;
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const endpoints = ['/', '/view/', '/stats/'];
+const endpoints = ['/view/', '/stats/'];
 async function test_end_point_(test_url){
     var res_ctr=0;
     var rate_limit_ctr=0;

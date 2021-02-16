@@ -19,10 +19,12 @@ import (
 )
 //MESSAGE LIMIT CACHE--------------------
 const PURGE_TIME=1*time.Second;
-const RATE_LIMIT = 5*time.Second
-const REQUEST_LIMIT=100;
-// you will have no more than 10 requests in 5 seconds
-const UPLOAD_RATE=5*time.Second;
+const RATE_LIMIT = 10*time.Second
+const REQUEST_LIMIT=5;
+// you will have no more than 5 requests in 10 seconds
+
+const HIGH_PERFOMANCE_MODE=false;// goes as fast as 10,000 keys per limit(your hardware will limit this likely)
+const UPLOAD_RATE=1*time.Second;
 
 //----------------------------------------//
 var messageCache = cache.New(RATE_LIMIT,PURGE_TIME)
@@ -30,8 +32,8 @@ var messageCache = cache.New(RATE_LIMIT,PURGE_TIME)
 var counterStack =make(map[string]string);
 //mutex to protect the map
 var mapMutex sync.Mutex;
-//database port
-var database_port="3000"
+//mutex to protect udp burst
+var serverMutex sync.Mutex;
 type counters struct {
 	sync.Mutex
 	view  int
@@ -73,19 +75,26 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addToStack(data string) {
-dt := time.Now()
+var key string;
+var currTime string;
 //Format MM-DD-YYYY hh:mm:ss
-currTime :=dt.Format("01-02-2006 15:04")
-key:=data+":"+ currTime;
-// if you want to use JSON you can parse this as JSON
-// for now i am just going to push as string
+//currTime :=dt.Format("01-02-2006 15:04")
+	if(HIGH_PERFOMANCE_MODE){
+		Time := time.Now();
+		currTime =Time.String()
+		key=data+":"+ currTime;
+	} else {
+		dt := time.Now();
+		currTime =dt.Format("01-02-2006 15:04")
+		key=data+":"+ currTime;
+	}
 views:= strconv.Itoa((c.view))
 clicks:= strconv.Itoa((c.click))
 value:="{views:"+views+",clicks:"+clicks+"}";
-fmt.Println("value->",value);
 mapMutex.Lock()
 counterStack[key]=value;
 mapMutex.Unlock()
+fmt.Println("key-> ",key," value->",value);
 }
 
 func processRequest(r *http.Request) error {
@@ -114,6 +123,7 @@ func isAllowed() bool {
 		Time := time.Now();
 		currTime :=Time.String()
 		messageCache.Add(currTime,"dummy",RATE_LIMIT);
+		fmt.Println("[statsHandler served]")
 		return true;
 	} else {
 		fmt.Println("[RATE LIMITED]")
@@ -125,7 +135,6 @@ func isAllowed() bool {
 
 func uploadCounters() error {
 	for{
-
 		time.Sleep(UPLOAD_RATE)
 		mapMutex.Lock()
 		if(len(counterStack)>1) {
@@ -167,7 +176,8 @@ func genUUID() string {
 }
 func sendRequest(key string,value string){
 	message,messageId:=generatePayload([]byte(key),[]byte(value));
-	server_address:="127.0.0.1"+":"+database_port;
+	argsWithProg := os.Args
+	server_address:="127.0.0.1"+":"+argsWithProg[2];
 	firePayload(message,server_address,messageId);
 }
 func calculate_checksum(a []byte,b []byte) uint64{
@@ -211,9 +221,14 @@ func generatePayload(key []byte,value []byte) ([]byte,string){
 	return casted_casing,message_id
 }
 func firePayload(shell []byte,server_ip string,message_id string){
+	serverMutex.Lock()
 	fire(shell,server_ip,0,100,message_id)
+	serverMutex.Unlock()
 }
 func fire(payload []byte,address string,itr int,timeout int64,message_id string){
+	if(itr>3) {
+		return;
+	}
 	fmt.Printf("RETRYING REQUEST [%d]--------------------------\n",itr);
 	conn, err := net.Dial("udp", address)
 	if err != nil {
@@ -276,9 +291,11 @@ func fire(payload []byte,address string,itr int,timeout int64,message_id string)
 				fmt.Printf("\nVALLUE WRITTEN SUCESSFULLY\n----------");
 				fmt.Printf("value written is \"%+v\"",string(res_struct.GetValue()));
 			} else {
-				fmt.Printf("\n[SERVER ERROR]satellite internal server error\n----------");
-				fmt.Printf("\n[RETRYING]\n")
-				fire(payload,address,itr+1,timeout+100,message_id);
+				fmt.Println("\n[SERVER ERROR]satellite internal server error ",res_struct.GetErrCode());
+				if(itr<3) {
+					fmt.Printf("\n[RETRYING]\n")
+					fire(payload,address,itr+1,timeout+100,message_id);
+				}
 			}
 		}
 		conn.Close();
@@ -301,7 +318,6 @@ func main() {
 			fmt.Printf("STARTING SERVER------------------\n")
 			server:=startServer()
 			server(argsWithProg[1])
-			database_port=argsWithProg[2]
 		}
 	}
 }

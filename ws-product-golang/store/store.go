@@ -284,33 +284,6 @@ func cache_data(message_id []byte,data []byte)(bool){
 func put(key []byte, value []byte, version int32) []byte {
 	var error_code uint32=0;
 	error_code=0;
-	if(int(len(key))>32) {
-		error_code=6;
-
-		var err_code *uint32;
-		err_code=new(uint32);
-		err_code=&error_code;
-
-		var _pid *int32;
-		_pid=new(int32);
-		procress_id:=int32(syscall.Getpid())
-		_pid=&procress_id
-		payload:=&protobuf.KVResponse{
-			ErrCode: err_code,
-			Value:   value,
-			Pid:_pid,
-		}
-		out, err := proto.Marshal(payload)
-		if err != nil {
-			log.Fatalln("Failed to encode address book:", err)
-		} else {
-			if(debug){
-				//fmt.Printf("NEW BUFFER-> %+v",out);
-			}
-		}
-
-		return out;
-	}
 	if(int(len(value))>10000) {
 		error_code=7;
 
