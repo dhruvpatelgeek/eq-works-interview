@@ -1,44 +1,44 @@
-# path 2b back end track
+# How to compile and run 
 
-in order to show my distributed system prowess i am goinging desing a fault tolertent  satellite-based  storages in addiiton to what has been asked 
+#### Run
 
-#### 
+1 .````RUN_DATABASE.sh```` 
 
-## Requirements
+2 .````RUN_SERVER.sh````
 
-- fast 
-- cheap
-- low memory footprint
+in that order 
 
-## design
+(if you dont run database before server it won't be able to store values)
 
-### communication
+#### TESTING
 
-i will ditch the application layer communication system ````UDP```` instead of  ````http```` in favour of transport layer communication for 
+if you dont have you own testing suite 
 
-- faster communication
-- 100x lower cost
+you can run 
 
-we will use 
-
-Google's protocol buffers on top of this to make it as light a feather 
-
-![](https://miro.medium.com/max/1400/1*2G7HXILlV5MUIHeNjiYZPA.png)
-
-(https://www.researchgate.net/publication/311461272_Performance_evaluation_of_using_Protocol_Buffers_in_the_Internet_of_Things_communication)
+````test/test_problem_2b.sh````
 
 
 
-### Architecture
+make sure you have ports
 
-![](https://github.com/dhruvpatelgeek/eq-works-interview/blob/master/ws-product-golang/architecture.png)
+```
+3000<- store
 
+3001<- client
+```
+
+avaibale 
+
+if not you can modify the  constants in````RUN_DATABASE.sh````  ,.````RUN_SERVER.sh```` files
 
 
 
 
-The client will encode the message in GCP and send a udp bye stream to the server. 
 
-we will used IEEE checksum for maintinaing data intergrity 
+- it will first test ```` "\" ````endpoint to  see if the server is up
 
- 
+- it will send 100 requests to ```` "/stats/" ```` and after the rate limiter kicks in you should see the number of rate limited (http err code 429) go up
+- it will send 100 requests to ```` "/view/" ```` you can see the the store.go term window that the client is periodically sending key<->value pairs to the store,
+  you can also see it in the server window that the client prints the store response.
+

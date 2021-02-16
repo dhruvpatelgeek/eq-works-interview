@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c032c2b9-5696-46a9-beda-4c221fd40bb7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ws-product-golang/RUN_DATABASE.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/go_server_tester.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/go_server_tester.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ws-product-golang/run_prj.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ws-product-golang/run_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/run_server.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ws-product-golang/src/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/src/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ws-product-golang/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/store/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ws-product-golang/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ws-product-golang/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
