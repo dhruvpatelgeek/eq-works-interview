@@ -1,19 +1,25 @@
 # Table of contents
 
-- [path 1 server-side rate-limiting NODE varient](#path-1-server-side-rate-limiting-node-varient)
-    - [Implementation](#implementation)
-        - [```` node-cache````](#-node-cache)
-    - [Design](#design)
-        - [OBJECTIVES](#objectives)
-        - [Rate Limiter Algorithms](#rate-limiter-algorithms)
-        - [decision](#decision)
-- [path 2b back end track](#path-2b-back-end-track)
-    - [Requirements](#requirements)
-    - [Design](#design)
-        - [Communication](#communication)
-        - [Architecture](#architecture)
 
-# path 1 server-side rate-limiting NODE varient
+## Deployment
+
+The API endpoint is deployed at 
+
+### ````http://bribchat.com:5555/````
+
+(on my general purpose server in San Jose)
+
+the rate is limited to 
+
+### ```` 5 requests over 10 seconds```` 
+
+refer to 
+
+### ````ws-product-golang/README.md````
+
+if you want to deploy and test it locally
+
+
 
 ## Implementation
 
@@ -22,8 +28,6 @@ We will use
 ### ```` node-cache````
 
 ![Logo](https://raw.githubusercontent.com/node-cache/node-cache/HEAD/logo/logo.png)
-
-[![Node.js CI](https://github.com/node-cache/node-cache/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/node-cache/node-cache/actions?query=workflow%3A"Node.js+CI"+branch%3A"master") ![Dependency status](https://img.shields.io/david/node-cache/node-cache) [![NPM package version](https://img.shields.io/npm/v/node-cache?label=npm%20package)](https://www.npmjs.com/package/node-cache) [![NPM monthly downloads](https://img.shields.io/npm/dm/node-cache)](https://www.npmjs.com/package/node-cache) [![GitHub issues](https://img.shields.io/github/issues/node-cache/node-cache)](https://github.com/node-cache/node-cache/issues) [![Coveralls Coverage](https://img.shields.io/coveralls/node-cache/node-cache.svg)](https://coveralls.io/github/node-cache/node-cache)
 
 when a user makes a request we fist see how many requests have been made in the past ````TIME-WINDOW````
 
@@ -85,10 +89,27 @@ the rate limit.
 
 # path 2b back end track
 
-in order to show my distributed system prowess i am goinging desing a fault tolertent satellite-based storages in
-addiiton to what has been asked
+I have designed a robust/lightweight/fast/fault tolorent store using transport layer communication protocol (UDP) for inter node communication. I have also used Google's protocol buffers for genrating and sending these Key value pairs because it is much smaller and faster than XML. So lower cost on our end and more profit.
 
-####  
+
+
+And the requirements
+
+
+
+- Support counters by content selection and time, example counter Key `"sports:2020-01-08 22:01"`, Value `{views: 100, clicks: 4}`.
+- Implement a mock store for storing counters. It can be in-memory, filesystem-based, or satellite-based (satellite not provided).
+- Create go routine to upload counters to the mock store every 5 seconds.
+- Global rate limit for stats handler.
+
+
+
+### Deployment
+
+Please refer to 
+
+### ````ws-product-golang/README.md````
+
 
 ## Requirements
 
@@ -109,7 +130,7 @@ in favour of transport layer communication   ````UDP````
 
 we will use
 
-Google's protocol buffers on top of this to make it as light a feather
+Google's protocol buffers on top of this
 
 ![](https://miro.medium.com/max/1400/1*2G7HXILlV5MUIHeNjiYZPA.png)
 
@@ -129,7 +150,7 @@ we will use the sliding window (without the log) rate limiting algorithm in this
 
 #### implementation
 
-> we will have a go-cache in which we will store requests stack with a RATE_LIMIT time of expiration date  if there are more requests it will simply overflow and respond with 429
+> we will have a go-cache in which we will store requests stack with a RATE_LIMIT time of expiration date  if there are more requests it will simply overflow and respond with http 429
 
 > we will also have a go map to store the key values that are to be stored
 >

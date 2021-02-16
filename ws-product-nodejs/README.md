@@ -7,13 +7,13 @@ there are three variables to control the rate limit
 
 ````GLOBAL_RATE_LIMIT````
 
->maximum number of requests you can handle accorss users
+>maximum number of requests you can handle across users
 
 ````TIME_LIMIT```` 
 >how long do should the request window be
 
 ````RATE_LIMIT_TIME_WINDOW````
->how big is the sliding window for th user
+>how big is the sliding window for the user
 
 ### Example
 say you have a GCP instance that can 
@@ -34,7 +34,7 @@ so set
 > individual client rate limiting
 
 I have configured my assignment in such a way that 
-if you want to limit rates on a per client bases you can do so 
+if you want to limit rates on a per-client basis you can do so 
 by simply changing the ````RATE_LIMIT_TIME_WINDOW```` for that client 
 it is fairly trivial to implement here
 
