@@ -24,7 +24,7 @@ const REQUEST_LIMIT=5;
 // you will have no more than 5 requests in 10 seconds
 
 const HIGH_PERFOMANCE_MODE=false;// goes as fast as 10,000 keys per limit(your hardware will limit this likely)
-const UPLOAD_RATE=1*time.Second;
+const UPLOAD_RATE=5*time.Second;// upload to store every 5 seconds
 
 //----------------------------------------//
 var messageCache = cache.New(RATE_LIMIT,PURGE_TIME)
@@ -46,11 +46,19 @@ var (
 )
 //----------------------------------------
 
-
+/**
+ * @Description: http endpoint for welcome
+ * @param w
+ * @param r
+ */
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to EQ Works 😎")
 }
-
+/**
+ * @Description: http enpoint for view
+ * @param w
+ * @param r
+ */
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	data := content[rand.Intn(len(content))]
 
@@ -73,7 +81,10 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	addToStack(data);
 
 }
-
+/**
+ * @Description: adds the key value pair for pushing to store
+ * @param data
+ */
 func addToStack(data string) {
 var key string;
 var currTime string;
@@ -96,12 +107,20 @@ counterStack[key]=value;
 mapMutex.Unlock()
 fmt.Println("key-> ",key," value->",value);
 }
-
+/**
+ * @Description: mock procressing request
+ * @param r
+ * @return error
+ */
 func processRequest(r *http.Request) error {
 	time.Sleep(time.Duration(rand.Int31n(50)) * time.Millisecond)
 	return nil
 }
-
+/**
+ * @Description: increment clicks
+ * @param data
+ * @return error
+ */
 func processClick(data string) error {
 	c.Lock()
 	c.click++
@@ -110,6 +129,11 @@ func processClick(data string) error {
 	return nil
 }
 
+/**
+ * @Description: stats handler for rate limiting feature
+ * @param w
+ * @param r
+ */
 func statsHandler(w http.ResponseWriter, r *http.Request) {
 	if !isAllowed() {
 		w.WriteHeader(429)
@@ -117,6 +141,10 @@ func statsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/**
+ * @Description: if true serve the request else done
+ * @return bool
+ */
 func isAllowed() bool {
 	if(messageCache.ItemCount()<REQUEST_LIMIT) {
 		// Defining the time for String method
@@ -131,8 +159,10 @@ func isAllowed() bool {
 	}
 }
 
-
-
+/**
+ * @Description: send data to the store every "UPLOAD_RATE" seconds
+ * @return error
+ */
 func uploadCounters() error {
 	for{
 		time.Sleep(UPLOAD_RATE)
@@ -147,6 +177,11 @@ func uploadCounters() error {
 		mapMutex.Unlock()
 	}
 }
+
+/**
+ * @Description: closure for initalizing the server
+ * @return func(port string)
+ */
 func startServer() func(port string){
 	go uploadCounters()
 	return func (port string) {
@@ -158,6 +193,11 @@ func startServer() func(port string){
 	}
 }
 //COMUNICATION WITH satellite------------------------------------
+/**
+ * @Description: return true if port is valid
+ * @param port
+ * @return bool
+ */
 func checkIfPortIsValid(port string) bool {
 	castedPort, err := strconv.Atoi(port)
 	if err != nil {
@@ -169,22 +209,44 @@ func checkIfPortIsValid(port string) bool {
 		return true
 	}
 }
+/**
+ * @Description: generates uuid for message id
+ * @return string
+ */
 func genUUID() string {
 	id := guuid.New()
 	//fmt.Printf("UUID GENERATED-> %s\n", id.String())
 	return id.String()
 }
+/**
+ * @Description: sends an put request to the database(store)
+ * @param key
+ * @param value
+ */
 func sendRequest(key string,value string){
 	message,messageId:=generatePayload([]byte(key),[]byte(value));
 	argsWithProg := os.Args
 	server_address:="127.0.0.1"+":"+argsWithProg[2];
 	firePayload(message,server_address,messageId);
 }
+/**
+ * @Description: returns the ieee checksum
+ * @param a
+ * @param b
+ * @return uint64
+ */
 func calculate_checksum(a []byte,b []byte) uint64{
 	var concat_byte_arr=append(a,b...);
 	var check_sum=uint64(crc32.ChecksumIEEE(concat_byte_arr))
 	return check_sum;
 }
+/**
+ * @Description: generates the put request payload
+ * @param key
+ * @param value
+ * @return []byte
+ * @return string
+ */
 func generatePayload(key []byte,value []byte) ([]byte,string){
 	//* 0x01 - Put: This is a put operation.
 	//* 0x02 - Get: This is a get operation.
@@ -220,11 +282,25 @@ func generatePayload(key []byte,value []byte) ([]byte,string){
 
 	return casted_casing,message_id
 }
+/**
+ * @Description: sends the payload to the server_ip
+ * @param shell
+ * @param server_ip
+ * @param message_id
+ */
 func firePayload(shell []byte,server_ip string,message_id string){
 	serverMutex.Lock()
 	fire(shell,server_ip,0,100,message_id)
 	serverMutex.Unlock()
 }
+/**
+ * @Description: "fire" is a retry mechanic to insure data integrity over lossy connection (since we are using UDP)
+ * @param payload
+ * @param address
+ * @param itr
+ * @param timeout
+ * @param message_id
+ */
 func fire(payload []byte,address string,itr int,timeout int64,message_id string){
 	if(itr>3) {
 		return;
