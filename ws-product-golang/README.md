@@ -14,14 +14,14 @@ in that order
 
 if you dont have your own testing suite 
 
-you can run after running 
+you can run ````node test/test_problem_2b.js```` after running 
 
 ````RUN_DATABASE.sh```` 
 
 ````RUN_SERVER.sh````
-then
 
-````node test/test_problem_2b.js````
+
+
 
 
 
