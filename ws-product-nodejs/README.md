@@ -18,16 +18,14 @@ there are three variables to control the rate limit
 ### Example
 say you have a GCP instance that can 
 handle no more than
-````5000```` total requests 
-in ````1 hr````
+````5```` total requests 
+in ````10 secs````
 
 so set
 
-````GLOBAL_RATE_LIMIT=5000````
+````TIME_LIMIT=10````
 
-````TIME_LIMIT=60*60````
-
-````RATE_LIMIT_TIME_WINDOW=5000````
+````RATE_LIMIT_TIME_WINDOW=5````
 
 
 ### future features
