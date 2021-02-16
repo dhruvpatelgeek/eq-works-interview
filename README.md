@@ -1,5 +1,49 @@
 # Table of contents
 
+- [Table of contents](#table-of-contents)
+    - [VIDEOS](#videos)
+  - [Deployment](#deployment)
+    - [````http://bribchat.com:5555/````](#httpbribchatcom5555)
+    - [```` 5 requests over 10 seconds````](#-5-requests-over-10-seconds)
+    - [````ws-product-golang/README.md````](#ws-product-golangreadmemd)
+  - [Implementation](#implementation)
+    - [```` node-cache````](#-node-cache)
+  - [Design](#design)
+    - [OBJECTIVES](#objectives)
+    - [Rate Limiter Algorithms](#rate-limiter-algorithms)
+    - [decision](#decision)
+- [path 2b back end track](#path-2b-back-end-track)
+    - [Deployment](#deployment)
+    - [````ws-product-golang/README.md````](#ws-product-golangreadmemd)
+  - [Requirements](#requirements)
+  - [Design](#design)
+    - [Communication](#communication)
+    - [Architecture](#architecture)
+    - [Rate Limiter Algorithm](#rate-limiter-algorithm)
+
+### VIDEOS
+
+(server-side rate-limiting)
+
+
+
+https://vimeo.com/512834253
+
+
+
+(Back-end Track)
+
+
+
+https://vimeo.com/512834202
+
+
+
+(Back-end Track EXTRA FEATURE 1k requests in 100milli seconds)
+
+
+
+https://vimeo.com/512834228
 
 ## Deployment
 
