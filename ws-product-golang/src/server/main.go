@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	guuid "github.com/google/uuid"
+	"github.com/pmylund/go-cache"
 	"hash/crc32"
 	"log"
 	"math/rand"
@@ -16,7 +17,18 @@ import (
 	"sync"
 	"time"
 )
-
+//MESSAGE LIMIT CACHE--------------------
+const RATE_LIMIT = 5*time.Second
+const PURGE_TIME=1*time.Second;
+const UPLOAD_RATE=5*time.Second;
+//----------------------------------------//
+var message_cache = cache.New(RATE_LIMIT,PURGE_TIME)
+// stack to store requests
+var counterStack =make(map[string]string);
+//mutex to protect the map
+var mapMutex sync.Mutex;
+//database port
+var database_port="3000"
 type counters struct {
 	sync.Mutex
 	view  int
@@ -26,12 +38,12 @@ type counters struct {
 var (
 	c = counters{}
 	content = []string{"sports", "entertainment", "business", "education"}
-	database_port="3000"
 )
+//----------------------------------------
+
 
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to EQ Works 😎")
-	sendRequest("hello","world");
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +64,25 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	if rand.Intn(100) < 50 {
 		processClick(data)
 	}
+
+	addToStack(data);
+
+}
+
+func addToStack(data string) {
+dt := time.Now()
+//Format MM-DD-YYYY hh:mm:ss
+currTime :=dt.Format("01-02-2006 15:04")
+key:=data+":"+ currTime;
+// if you want to use JSON you can parse this as JSON
+// for now i am just going to push as string
+views:= strconv.Itoa((c.view))
+clicks:= strconv.Itoa((c.click))
+value:="{views:"+views+",clicks:"+clicks+"}";
+fmt.Println("value->",value);
+mapMutex.Lock()
+counterStack[key]=value;
+mapMutex.Unlock()
 }
 
 func processRequest(r *http.Request) error {
@@ -78,16 +109,31 @@ func isAllowed() bool {
 	return true
 }
 
-func uploadCounters() error {
-	return nil
-}
 
-func startServer(port string){
-	http.HandleFunc("/", welcomeHandler)
-	http.HandleFunc("/view/", viewHandler)
-	http.HandleFunc("/stats/", statsHandler)
-	addr:=":"+port;
-	log.Fatal(http.ListenAndServe(addr, nil))
+func uploadCounters() error {
+	for{
+
+		time.Sleep(UPLOAD_RATE)
+		mapMutex.Lock()
+		if(len(counterStack)>1) {
+			for k, v := range counterStack {
+				fmt.Printf("[SENDING] key[%s] value[%s]\n", k, v)
+				sendRequest(k,v);
+				delete(counterStack, k);
+			}
+		}
+		mapMutex.Unlock()
+	}
+}
+func startServer() func(port string){
+	go uploadCounters()
+	return func (port string) {
+		http.HandleFunc("/", welcomeHandler)
+		http.HandleFunc("/view/", viewHandler)
+		http.HandleFunc("/stats/", statsHandler)
+		addr:=":"+port;
+		log.Fatal(http.ListenAndServe(addr, nil))
+	}
 }
 //COMUNICATION WITH satellite------------------------------------
 func checkIfPortIsValid(port string) bool {
@@ -240,7 +286,8 @@ func main() {
 			fmt.Printf("[database port] NOT VALID,EXITTING...\n")
 		} else {
 			fmt.Printf("STARTING SERVER------------------\n")
-			startServer(argsWithProg[1]) // initaliaze;
+			server:=startServer()
+			server(argsWithProg[1])
 			database_port=argsWithProg[2]
 		}
 	}
