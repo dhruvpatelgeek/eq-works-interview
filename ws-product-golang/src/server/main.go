@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../../google_protocol_buffer/pb/protobuf"
+	"hash/google_protocol_buffer/pb/protobuf"
 	"bufio"
 	"fmt"
 	"github.com/golang/protobuf/proto"

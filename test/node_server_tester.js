@@ -1,14 +1,14 @@
 var GLOBAL_RATE_LIMIT=3000; // maximum number of requests you can handle accorss users
 var TIME_LIMIT=10; // how big is the sliding window
 var RATE_LIMIT_TIME_WINDOW=100;// how big is the sliding window for th user
-var LIMIT=1;
+var LIMIT=10;
 const delay = 100;
 
 // 5 res in 10 secds 
 
 const fetch = require('node-fetch');
-const _URL = "http://bribchat.com:5555"; // deployed version
-//const _URL = "http://localhost:5555"; // local version
+//const _URL = "http://bribchat.com:5555"; // deployed version
+const _URL = "http://localhost:5555"; // local version
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

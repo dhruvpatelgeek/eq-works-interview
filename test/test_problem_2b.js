@@ -1,5 +1,5 @@
 const SERVER_PORT="3001"
-var LIMIT=10;
+var LIMIT=1000;
 const http = require('http');
 const _URL = "http://localhost:"+SERVER_PORT;
 const delay = 100;

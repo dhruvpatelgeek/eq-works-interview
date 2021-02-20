@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../google_protocol_buffer/pb/protobuf"
+	"hash/google_protocol_buffer/pb/protobuf"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/pmylund/go-cache"
